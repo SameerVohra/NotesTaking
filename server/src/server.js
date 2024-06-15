@@ -1,7 +1,6 @@
 const express = require("express");
 const { default: mongoose } = require("mongoose");
-
-const app = express();
+const app = require("./App.js");
 
 const port = 3000;
 
@@ -11,6 +10,11 @@ mongoose
   )
   .then(() => console.log("Connected Successfully"))
   .catch((error) => console.log(error));
+
+app.get("/test", (req, res) => {
+  console.log("Testing");
+  res.send("Testing successful");
+});
 
 app.listen(port, () => {
   console.log(`Listening to port ${port}`);
