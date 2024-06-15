@@ -3,12 +3,15 @@ import { Input } from "./Input";
 import { NewNote } from "./NewNote";
 import { NotesCard } from "./NotesCard";
 import axios from "axios";
+import { Editing } from "./Editing";
 
 export const MainPage = () => {
   const [title, setTitle] = useState("");
   const [tagline, setTagline] = useState("");
   const [body, setBody] = useState("");
   const [isFormVisible, setIsFormVisible] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [notesId, setNotesId] = useState(null);
   const [notes, setNotes] = useState([]);
 
   const handleTitle = (e) => {
@@ -67,7 +70,8 @@ export const MainPage = () => {
     fetchNotes();
   }, []);
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id, e) => {
+    e.stopPropagation();
     try {
       const response = await axios.delete(
         `http://localhost:3000/delete-note/${id}`,
@@ -83,7 +87,8 @@ export const MainPage = () => {
     setIsFormVisible(!isFormVisible);
   };
 
-  const togglePin = async (id) => {
+  const togglePin = async (id, e) => {
+    e.stopPropagation();
     try {
       const response = await axios.patch(`http://localhost:3000/pin/${id}`);
       console.log(response.data);
@@ -93,51 +98,65 @@ export const MainPage = () => {
     }
   };
 
+  const handleEdit = (id, e) => {
+    e.preventDefault();
+    setIsEditing(true);
+    console.log("editing");
+    setNotesId(id);
+  };
+
   return (
     <>
-      {!isFormVisible && (
-        <div className="flex flex-wrap flex-row justify-center gap-10 items-center p-10">
+      {!isFormVisible && !isEditing && (
+        <div className="flex flex-wrap flex-row justify-start gap-10 items-center p-10">
           {notes.map((note) => (
             <NotesCard
               key={note._id}
               title={note.title}
               tagline={note.tagline}
               body={note.body}
-              onClick={() => handleDelete(note._id)}
-              onClickPin={() => togglePin(note._id)}
+              onClick={(e) => handleDelete(note._id, e)}
+              onClickPin={(e) => togglePin(note._id, e)}
+              handleEdit={(e) => handleEdit(note._id, e)}
               isPinned={note.isPinned}
             />
           ))}
         </div>
       )}
 
+      {isEditing && <Editing id={notesId} setIsEditing={setIsEditing} />}
+
       {isFormVisible && (
-        <div className="min-h-screen backdrop-blur-sm">
-          <div className="flex flex-wrap justify-center items-center flex-col min-h-screen bg-opacity-70 backdrop-blur-3xl fixed inset-0 z-50">
-            <h1 className="text-white">Add New Note</h1>
-            <div className="flex flex-wrap px-6 py-2 border-2 border-white bg-yellow-200 rounded-3xl flex-col justify-center items-start">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+          <div className="w-full max-w-lg p-8 bg-white rounded-2xl shadow-lg">
+            <h1 className="mb-4 text-2xl font-bold text-center text-gray-800">
+              Add New Note
+            </h1>
+            <div className="space-y-4">
               <Input
                 label="Title"
-                className="px-4 py-2 text-xl text-black"
+                className="w-full px-4 py-2 text-xl border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-800"
                 value={title}
                 onChange={handleTitle}
               />
               <Input
                 label="Tagline"
-                className="px-4 py-2 text-xl text-black"
+                className="w-full px-4 py-2 text-xl border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-800"
                 value={tagline}
                 onChange={handleTagline}
               />
-              <h3>Body: </h3>
+              <label className="block text-lg font-medium text-gray-700">
+                Body:
+              </label>
               <textarea
                 rows={5}
-                cols={40}
                 placeholder="Enter Body..."
+                className="w-full px-4 py-2 text-lg border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-800"
                 value={body}
                 onChange={handleBody}
               />
               <button
-                className="border-2 border-black bg-white text-black mt-2"
+                className="w-full px-4 py-2 text-lg font-bold text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 onClick={handleSubmit}
               >
                 Add Note
@@ -146,7 +165,6 @@ export const MainPage = () => {
           </div>
         </div>
       )}
-
       <NewNote isFormVisible={isFormVisible} onClick={toggleFormVisibility} />
     </>
   );

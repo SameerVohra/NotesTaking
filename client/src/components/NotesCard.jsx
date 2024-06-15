@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 export const NotesCard = ({
   title,
@@ -7,18 +7,42 @@ export const NotesCard = ({
   onClick,
   isPinned,
   onClickPin,
+  handleEdit,
 }) => {
+  const handleDeleteClick = (e) => {
+    e.stopPropagation();
+    onClick(e);
+  };
+
+  const handlePinClick = (e) => {
+    e.stopPropagation();
+    onClickPin(e);
+  };
+
   return (
-    <div className="bg-yellow-400 p-6 m-4 rounded-3xl shadow-lg max-w-md w-full">
-      <p className="text-right text-gray-500 cursor-pointer" onClick={onClick}>
-        x
-      </p>
-      <h1 className="text-3xl font-bold mb-2">Title: {title}</h1>
+    <div
+      className="bg-yellow-400 p-6 m-4 rounded-2xl shadow-2xl max-w-md w-full cursor-pointer transform transition-transform hover:scale-105 hover:shadow-yellow-400"
+      onClick={handleEdit}
+    >
+      <div className="flex justify-between items-start mb-4">
+        <h1 className="text-3xl font-bold">Title: {title}</h1>
+        <button
+          className="text-gray-500 font-bold hover:text-gray-700"
+          onClick={handleDeleteClick}
+        >
+          x
+        </button>
+      </div>
       <h3 className="text-2xl font-semibold mb-2">Tagline: {tagline}</h3>
-      <p className="text-xl leading-relaxed">Body: {body}</p>
-      <p className="text-right text-xl cursor-pointer" onClick={onClickPin}>
-        {!isPinned ? "📍" : "📌"}
-      </p>
+      <p className="text-xl leading-relaxed mb-4">Body: {body}</p>
+      <div className="flex justify-end">
+        <button
+          className="text-2xl hover:text-yellow-600"
+          onClick={handlePinClick}
+        >
+          {!isPinned ? "📍" : "📌"}
+        </button>
+      </div>
     </div>
   );
 };

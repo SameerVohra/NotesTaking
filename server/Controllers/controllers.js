@@ -59,9 +59,37 @@ const PinNotes = async (req, res) => {
   }
 };
 
+const FindNotes = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const note = await Notes.findOne({ _id: id });
+    console.log(note);
+    res.status(200).send(note);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+const EditNote = async (req, res) => {
+  const { id, title, tagline, body } = req.body;
+  try {
+    const note = await Notes.findOneAndUpdate(
+      { _id: id },
+      { title: title, tagline: tagline, body: body },
+    );
+    console.log(note);
+    res.status(201).send(note);
+  } catch (error) {
+    res.status(501).send("Internal Server Error");
+  }
+};
+
 module.exports = {
   AddNotes,
   FetchNotes,
   DeleteNote,
   PinNotes,
+  FindNotes,
+  EditNote,
 };
