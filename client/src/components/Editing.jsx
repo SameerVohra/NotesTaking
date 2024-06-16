@@ -10,7 +10,7 @@ export const Editing = ({ id }) => {
     const fetchNote = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/find-note/${id}`,
+          `https://notes-taking-swart.vercel.app/${id}`,
         );
         console.log(response);
         setTitle(response.data.title);
@@ -26,12 +26,15 @@ export const Editing = ({ id }) => {
 
   const updateNote = async () => {
     try {
-      const res = await axios.post(`http://localhost:3000/edit`, {
-        title,
-        tagline,
-        body,
-        id,
-      });
+      const res = await axios.post(
+        `https://notes-taking-swart.vercel.app/edit`,
+        {
+          title,
+          tagline,
+          body,
+          id,
+        },
+      );
       if (res.status === 201) {
         console.log(res);
         window.location.reload();

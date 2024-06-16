@@ -42,11 +42,14 @@ export const MainPage = () => {
     e.preventDefault();
     try {
       setErr("");
-      const response = await axios.post(`http://localhost:3000/add-note`, {
-        title,
-        tagline,
-        body,
-      });
+      const response = await axios.post(
+        `https://notes-taking-swart.vercel.app/add-note`,
+        {
+          title,
+          tagline,
+          body,
+        },
+      );
       console.log(response.data);
 
       setTitle("");
@@ -64,7 +67,7 @@ export const MainPage = () => {
     try {
       setErr("");
       const response = await axios.get(
-        `http://localhost:3000/fetch-notes?page=${page}&limit=${notes_per_page}`,
+        `https://notes-taking-swart.vercel.app/fetch-notes?page=${page}&limit=${notes_per_page}`,
       );
       console.log(response.data);
       const sortedNotes = response.data.notes.sort((a, b) => {
@@ -91,7 +94,7 @@ export const MainPage = () => {
     try {
       setErr("");
       const response = await axios.delete(
-        `http://localhost:3000/delete-note/${id}`,
+        `https://notes-taking-swart.vercel.app/delete-note/${id}`,
       );
       console.log(response.data);
       fetchNotes(currentPage); // Fetch notes after deleting a note
@@ -111,7 +114,9 @@ export const MainPage = () => {
     e.stopPropagation();
     try {
       setErr("");
-      const response = await axios.patch(`http://localhost:3000/pin/${id}`);
+      const response = await axios.patch(
+        `https://notes-taking-swart.vercel.app/pin/${id}`,
+      );
       console.log(response.data);
       fetchNotes(currentPage); // Fetch notes after updating pin status
     } catch (error) {
