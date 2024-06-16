@@ -143,7 +143,7 @@ export const MainPage = () => {
       <div className="flex-grow">
         {!isFormVisible && !isEditing && (
           <div>
-            <div className="flex flex-wrap flex-row justify-center gap-10 items-center p-10">
+            <div className="flex flex-wrap flex-row justify-left gap-10 items-center p-10">
               {notes.map((note) => (
                 <NotesCard
                   key={note._id}
