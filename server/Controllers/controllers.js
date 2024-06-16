@@ -26,9 +26,16 @@ const AddNotes = async (req, res) => {
 
 const FetchNotes = async (req, res) => {
   try {
-    const data = await Notes.find({}, "title tagline body isPinned notesId");
+    const { page = 1, limit = 6 } = req.query;
 
-    res.status(201).send(data);
+    const notes = await Notes.find({}, "title tagline body isPinned notesId")
+      .sort({ isPinned: -1 })
+      .skip((page - 1) * limit)
+      .limit(Number(limit));
+
+    const totalCount = await Notes.countDocuments();
+
+    res.status(200).json({ notes, totalCount });
   } catch (error) {
     console.log(error);
     res.status(501).send("Internal Server Error");

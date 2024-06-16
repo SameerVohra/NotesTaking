@@ -27,7 +27,7 @@ export const NotesCard = ({
       <div className="flex justify-between items-start mb-4">
         <h1 className="text-3xl font-bold">Title: {title}</h1>
         <button
-          className="text-gray-500 font-bold hover:text-gray-700"
+          className="text-gray-800  font-bold hover:text-gray-300 text-2xl"
           onClick={handleDeleteClick}
         >
           x
